@@ -1,30 +1,32 @@
 ﻿using System;
+using System.IO;
 using MoonSharp.Interpreter;
 
 namespace MoonSharpExample
 {
     class Program
     {
-        static double Factorial()
+        static double Factorial(int factorial)
         {
-            string script = @"    
-                -- defines a factorial function
-                function fact (n)
-                    if (n == 0) then
-                        return 1
-                    else
-                        return n*fact(n - 1)
-                    end
-                end
+            Script script = new Script();
+            script.Globals["factorial"] = factorial;
 
-                return fact(6)";
-
-            var res = Script.RunString(script);
-            return res.Number;
+            DynValue value;
+            try
+            {
+                value = script.DoFile("Factorial.lua");
+            }
+            catch(SyntaxErrorException exception)
+            {
+                Console.Error.WriteLine(exception.Message);
+                return 0;
+            }
+            
+            return value.Number;
         }
         static void Main(string[] args)
         {
-            Console.WriteLine(Factorial());
+            Console.WriteLine(Factorial(5));
         }
     }
 }
