@@ -11,10 +11,11 @@ namespace MoonSharpExample
             Script script = new Script();
             script.Globals["factorial"] = factorial;
 
-            DynValue value;
+            double number;
             try
             {
-                value = script.DoFile("Factorial.lua");
+                script.DoFile("Factorial.lua");
+                number = script.Call(script.Globals["fact"], factorial).Number;
             }
             catch(SyntaxErrorException exception)
             {
@@ -22,11 +23,11 @@ namespace MoonSharpExample
                 return 0;
             }
             
-            return value.Number;
+            return number;
         }
         static void Main(string[] args)
         {
-            Console.WriteLine(Factorial(5));
+            Console.WriteLine(Factorial(3));
         }
     }
 }
